@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import LoadingScreen from '../LoadingScreen';
 
 const userAPI = require('../services/userAPI');
@@ -30,6 +31,9 @@ class Header extends React.Component {
       loading ? <LoadingScreen /> : (
         <header data-testid="header-component">
           <h3 data-testid="header-user-name">{ name }</h3>
+          <Link to="/search" data-testid="link-to-search">Search</Link>
+          <Link to="/favorites" data-testid="link-to-favorites">Favorites</Link>
+          <Link to="/profile" data-testid="link-to-profile">Profile</Link>
         </header>
       )
     );
