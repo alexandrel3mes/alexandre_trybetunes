@@ -33,17 +33,22 @@ class Search extends React.Component {
 
   saveBtn = async () => {
     const { artistName } = this.state;
-    this.setState({ albums: [] });
-    this.setState({ loading: true });
+    this.setState({
+      albums: [],
+      loading: true,
+    });
     const search = await searchAlbumsAPI(artistName);
     this.setState({ albums: search });
     const arrLength = search.length;
-    this.setState({ artistListLength: arrLength });
-    this.setState({ artistAfterFetch: artistName });
-    this.setState({ artistName: '' });
-    this.setState({ loading: false });
-    this.setState({ clicked: true });
-    console.log(search);
+    this.setState({
+      artistListLength: arrLength,
+      artistAfterFetch: artistName,
+    });
+    this.setState({
+      artistName: '',
+      loading: false,
+      clicked: true,
+    });
   }
 
   render() {
@@ -99,9 +104,11 @@ class Search extends React.Component {
                   data-testid={ `link-to-album-${album.collectionId}` }
                   to={ `/album/${album.collectionId}` }
                 >
-                  <img src={ album.artworkUrl100 } alt="Album Cover" />
-                  <h2>{album.collectionName}</h2>
-                  <p>{album.artistName}</p>
+                  <div>
+                    <img src={ album.artworkUrl100 } alt="Album Cover" />
+                    <h2>{album.collectionName}</h2>
+                    <p>{album.artistName}</p>
+                  </div>
                 </Link>))
             )
           }
