@@ -22,8 +22,7 @@ class Login extends React.Component {
     });
   }
 
-  saveBtn = (event) => {
-    event.preventDefault();
+  saveBtn = () => {
     console.log('foi');
   }
 
@@ -44,7 +43,7 @@ class Login extends React.Component {
             name="userName"
           />
           <button
-            type="submit"
+            type="button"
             disabled={ SaveButtonDisabled }
             onClick={ this.saveBtn }
             data-testid="login-submit-button"
