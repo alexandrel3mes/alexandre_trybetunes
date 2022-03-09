@@ -47,11 +47,8 @@ class Album extends React.Component {
     const request = await getMusics(id);
     this.setState({ albumColection: request[0] });
 
-    /* const newRequest = await getMusics(id); */
     const filtered = request.filter((req) => req.kind === 'song');
     this.setState({ albumInfo: filtered });
-
-    /* this.favSongs(); */
   }
 
   funcThatAddSong = async (prop) => {
