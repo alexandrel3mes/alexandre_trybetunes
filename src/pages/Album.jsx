@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import MusicCard from '../components/MusicCard';
 import LoadingScreen from '../LoadingScreen';
 
@@ -59,10 +59,21 @@ class Album extends React.Component {
     }));
   }
 
+  funcThatRmvSong = async (prop) => {
+    await removeSong(prop);
+    this.setState((prevState) => ({
+      favs: prevState.favs.filter((fav) => fav !== prop.trackId),
+      loading: false,
+    }));
+  }
+
   handleChange = (prop, { target }) => {
     this.setState({ loading: true });
     if (target.checked) {
       this.funcThatAddSong(prop);
+    }
+    if (!target.checked) {
+      this.funcThatRmvSong(prop);
     }
   }
 
