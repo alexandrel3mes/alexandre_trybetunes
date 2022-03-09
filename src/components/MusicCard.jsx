@@ -9,6 +9,7 @@ class MusicCard extends React.Component {
       trackId,
       favChange,
       favCheck,
+      music,
     } = this.props;
     return (
       <div>
@@ -24,7 +25,7 @@ class MusicCard extends React.Component {
           Favorita
           <input
             checked={ favCheck }
-            onChange={ () => favChange(trackId) }
+            onChange={ (event) => favChange(music, event) }
             type="checkbox"
             data-testid={ `checkbox-music-${trackId}` }
             name="favChecked"

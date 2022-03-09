@@ -15,29 +15,25 @@ class Album extends React.Component {
       albumInfo: [],
       loading: false,
       favs: [],
-      checked: true,
-      notChecked: false,
     };
   }
 
   componentDidMount() {
-    this.favSongs();
     this.apiReq();
+    this.favSongs();
   }
 
   favSongs = async () => {
     this.setState({ loading: true });
     const request = await getFavoriteSongs();
-    const noRepeat = [...new Set(request)];
 
-    const { match: { params: { id } } } = this.props;
-    const requestAlbum = await getMusics(id);
-    const idsFromTracks = requestAlbum.map((element) => element.trackId);
+    const { albumInfo } = this.state;
+    const idsFromTracks = albumInfo.map((element) => element.trackId);
 
     const favsIds = [];
-    noRepeat.forEach((el) => idsFromTracks.forEach((ele) => {
-      if (el === ele) {
-        favsIds.push(el);
+    request.forEach((el) => idsFromTracks.forEach((ele) => {
+      if (el.trackId === ele) {
+        favsIds.push(ele);
       }
     }));
     this.setState({
@@ -51,21 +47,26 @@ class Album extends React.Component {
     const request = await getMusics(id);
     this.setState({ albumColection: request[0] });
 
-    const newRequest = await getMusics(id);
-    const filtered = newRequest.filter((req) => req.kind === 'song');
+    /* const newRequest = await getMusics(id); */
+    const filtered = request.filter((req) => req.kind === 'song');
     this.setState({ albumInfo: filtered });
 
-    this.favSongs();
+    /* this.favSongs(); */
   }
 
-  handleChange = async (prop) => {
-    this.setState({ loading: true });
+  funcThatAddSong = async (prop) => {
     await addSong(prop);
     this.setState((prevState) => ({
-      favs: [...prevState.favs, prop],
+      favs: [...prevState.favs, prop.trackId],
+      loading: false,
     }));
-    this.setState({ loading: false });
-    this.favSongs();
+  }
+
+  handleChange = (prop, { target }) => {
+    this.setState({ loading: true });
+    if (target.checked) {
+      this.funcThatAddSong(prop);
+    }
   }
 
   render() {
@@ -74,8 +75,6 @@ class Album extends React.Component {
       albumColection,
       loading,
       favs,
-      checked,
-      notChecked,
     } = this.state;
     return (
       <>
@@ -97,9 +96,9 @@ class Album extends React.Component {
                       musicName={ album.trackName }
                       musicPreview={ album.previewUrl }
                       trackId={ album.trackId }
-                      favCheck={ favs
-                        .some((fav) => fav === album.trackId) ? checked : notChecked }
+                      favCheck={ favs.some((fav) => fav === album.trackId) }
                       favChange={ this.handleChange }
+                      music={ album }
                     />
                   ))
                 }
