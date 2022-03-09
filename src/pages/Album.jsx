@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 import MusicCard from '../components/MusicCard';
 import LoadingScreen from '../LoadingScreen';
 
@@ -21,7 +21,29 @@ class Album extends React.Component {
   }
 
   componentDidMount() {
+    this.favSongs();
     this.apiReq();
+  }
+
+  favSongs = async () => {
+    this.setState({ loading: true });
+    const request = await getFavoriteSongs();
+    const noRepeat = [...new Set(request)];
+
+    const { match: { params: { id } } } = this.props;
+    const requestAlbum = await getMusics(id);
+    const idsFromTracks = requestAlbum.map((element) => element.trackId);
+
+    const favsIds = [];
+    noRepeat.forEach((el) => idsFromTracks.forEach((ele) => {
+      if (el === ele) {
+        favsIds.push(el);
+      }
+    }));
+    this.setState({
+      loading: false,
+      favs: favsIds,
+    });
   }
 
   apiReq = async () => {
@@ -32,20 +54,18 @@ class Album extends React.Component {
     const newRequest = await getMusics(id);
     const filtered = newRequest.filter((req) => req.kind === 'song');
     this.setState({ albumInfo: filtered });
+
+    this.favSongs();
   }
 
   handleChange = async (prop) => {
     this.setState({ loading: true });
     await addSong(prop);
-    /* const { name } = target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    this.setState({
-      [name]: value,
-    }); */
     this.setState((prevState) => ({
       favs: [...prevState.favs, prop],
     }));
     this.setState({ loading: false });
+    this.favSongs();
   }
 
   render() {
