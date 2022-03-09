@@ -39,6 +39,8 @@ MusicCard.propTypes = {
   musicName: PropTypes.string.isRequired,
   musicPreview: PropTypes.string.isRequired,
   trackId: PropTypes.number.isRequired,
+  favChange: PropTypes.func.isRequired,
+  favCheck: PropTypes.bool.isRequired,
 };
 
 export default MusicCard;
